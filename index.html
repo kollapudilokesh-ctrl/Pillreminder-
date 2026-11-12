@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PillReminder</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #172033;
+}
+
+header {
+  background: #1769e0;
+  color: white;
+  padding: 25px 20px;
+  border-radius: 0 0 25px 25px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+}
+
+header p {
+  margin: 0;
+  opacity: .9;
+}
+
+.container {
+  padding: 20px;
+  max-width: 550px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 12px #00000010;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 19px;
+}
+
+label {
+  display: block;
+  margin: 13px 0 7px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  font-size: 16px;
+}
+
+button {
+  border: none;
+  border-radius: 9px;
+  padding: 12px 16px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.add {
+  background: #1769e0;
+  color: white;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.medicine {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.medicine h3 {
+  margin: 0 0 8px;
+}
+
+.time {
+  color: #1769e0;
+  font-weight: bold;
+}
+
+.taken {
+  background: #dcfce7;
+  color: #166534;
+  margin-top: 10px;
+}
+
+.delete {
+  background: #fee2e2;
+  color: #991b1b;
+  margin: 10px 0 0 5px;
+}
+
+.empty {
+  color: #64748b;
+  text-align: center;
+  padding: 15px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>💊 PillReminder</h1>
+  <p>Your personal medicine reminder</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>➕ Add Medicine</h2>
+
+    <label>Medicine Name</label>
+    <input type="text" id="medicineName"
+      placeholder="Enter medicine name">
+
+    <label>Reminder Time</label>
+    <input type="time" id="medicineTime">
+
+    <button class="add" onclick="addMedicine()">
+      + Add Medicine
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>📋 My Medicines</h2>
+    <div id="medicineList">
+      <p class="empty">No medicines added yet.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  PillReminder App • Your health, your schedule
+</footer>
+
+<script>
+
+let medicines = JSON.parse(
+  localStorage.getItem("pillMedicines") || "[]"
+);
+
+function saveMedicines() {
+  localStorage.setItem(
+    "pillMedicines",
+    JSON.stringify(medicines)
+  );
+}
+
+function addMedicine() {
+
+  const name = document.getElementById("medicineName").value.trim();
+  const time = document.getElementById("medicineTime").value;
+
+  if (!name || !time) {
+    alert("Please enter medicine name and time.");
+    return;
+  }
+
+  medicines.push({
+    id: Date.now(),
+    name: name,
+    time: time,
+    taken: false
+  });
+
+  saveMedicines();
+  displayMedicines();
+
+  document.getElementById("medicineName").value = "";
+  document.getElementById("medicineTime").value = "";
+}
+
+function markTaken(id) {
+
+  medicines = medicines.map(medicine => {
+    if (medicine.id === id) {
+      medicine.taken = !medicine.taken;
+    }
+    return medicine;
+  });
+
+  saveMedicines();
+  displayMedicines();
+}
+
+function deleteMedicine(id) {
+
+  if (!confirm("Delete this medicine reminder?")) return;
+
+  medicines = medicines.filter(
+    medicine => medicine.id !== id
+  );
+
+  saveMedicines();
+  displayMedicines();
+}
+
+function displayMedicines() {
+
+  const list = document.getElementById("medicineList");
+
+  if (medicines.length === 0) {
+    list.innerHTML =
+      '<p class="empty">No medicines added yet.</p>';
+    return;
+  }
+
+  list.innerHTML = "";
+
+  medicines.forEach(medicine => {
+
+    const item = document.createElement("div");
+    item.className = "medicine";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "💊 " + medicine.name;
+
+    const time = document.createElement("p");
+    time.className = "time";
+    time.textContent = "⏰ " + medicine.time;
+
+    const status = document.createElement("p");
+    status.textContent = medicine.taken
+      ? "✓ Marked as taken"
+      : "Not taken yet";
+
+    const takenButton = document.createElement("button");
+    takenButton.className = "taken";
+    takenButton.textContent = medicine.taken
+      ? "Undo"
+      : "Mark as Taken";
+
+    takenButton.onclick = () => markTaken(medicine.id);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "delete";
+    deleteButton.textContent = "Delete";
+    deleteButton.onclick = () => deleteMedicine(medicine.id);
+
+    item.appendChild(heading);
+    item.appendChild(time);
+    item.appendChild(status);
+    item.appendChild(takenButton);
+    item.appendChild(deleteButton);
+
+    list.appendChild(item);
+  });
+}
+
+displayMedicines();
+
+</script>
+
+</body>
+</html>
