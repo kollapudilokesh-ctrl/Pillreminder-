@@ -1,283 +1,354 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PillReminder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PillReminder</title>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f1f5f9;
-  color: #172033;
-}
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+    }
 
-header {
-  background: #1769e0;
-  color: white;
-  padding: 25px 20px;
-  border-radius: 0 0 25px 25px;
-}
+    .container {
+      max-width: 500px;
+      margin: auto;
+    }
 
-header h1 {
-  margin: 0 0 8px;
-}
+    h1 {
+      text-align: center;
+      color: #2563eb;
+    }
 
-header p {
-  margin: 0;
-  opacity: .9;
-}
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+    }
 
-.container {
-  padding: 20px;
-  max-width: 550px;
-  margin: auto;
-}
+    .panel {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+      box-shadow: 0 3px 12px #00000010;
+    }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  margin-bottom: 18px;
-  box-shadow: 0 3px 12px #00000010;
-}
+    input, button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+    }
 
-h2 {
-  margin-top: 0;
-  font-size: 19px;
-}
+    input {
+      border: 1px solid #cbd5e1;
+    }
 
-label {
-  display: block;
-  margin: 13px 0 7px;
-  font-weight: bold;
-}
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-input {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #cbd5e1;
-  border-radius: 9px;
-  font-size: 16px;
-}
+    .medicine {
+      background: #eff6ff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 12px;
+    }
 
-button {
-  border: none;
-  border-radius: 9px;
-  padding: 12px 16px;
-  font-size: 15px;
-  cursor: pointer;
-}
+    .medicine h3 {
+      margin: 0 0 8px;
+    }
 
-.add {
-  background: #1769e0;
-  color: white;
-  width: 100%;
-  margin-top: 18px;
-}
+    .medicine p {
+      margin: 5px 0;
+    }
 
-.medicine {
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 14px;
-  margin-top: 12px;
-}
+    .taken {
+      background: #16a34a;
+    }
 
-.medicine h3 {
-  margin: 0 0 8px;
-}
+    .delete {
+      background: #dc2626;
+    }
 
-.time {
-  color: #1769e0;
-  font-weight: bold;
-}
-
-.taken {
-  background: #dcfce7;
-  color: #166534;
-  margin-top: 10px;
-}
-
-.delete {
-  background: #fee2e2;
-  color: #991b1b;
-  margin: 10px 0 0 5px;
-}
-
-.empty {
-  color: #64748b;
-  text-align: center;
-  padding: 15px;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  color: #64748b;
-  font-size: 13px;
-}
-</style>
+    #message {
+      text-align: center;
+      margin-top: 12px;
+      color: #475569;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
 
-<header>
-  <h1>💊 PillReminder</h1>
-  <p>Your personal medicine reminder</p>
-</header>
+    <h1>💊 PillReminder</h1>
+    <p class="subtitle">Your daily medicine reminder</p>
 
-<div class="container">
+    <div class="panel">
+      <h2>Add Medicine</h2>
 
-  <div class="card">
-    <h2>➕ Add Medicine</h2>
+      <input
+        type="text"
+        id="medicineName"
+        placeholder="Enter medicine name"
+      >
 
-    <label>Medicine Name</label>
-    <input type="text" id="medicineName"
-      placeholder="Enter medicine name">
+      <label for="medicineTime">Reminder time:</label>
+      <input type="time" id="medicineTime">
 
-    <label>Reminder Time</label>
-    <input type="time" id="medicineTime">
+      <button onclick="addMedicine()">
+        Add Medicine
+      </button>
 
-    <button class="add" onclick="addMedicine()">
-      + Add Medicine
-    </button>
-  </div>
-
-  <div class="card">
-    <h2>📋 My Medicines</h2>
-    <div id="medicineList">
-      <p class="empty">No medicines added yet.</p>
+      <p id="message"></p>
     </div>
+
+    <div class="panel">
+      <h2>My Medicines</h2>
+      <div id="medicineList"></div>
+    </div>
+
   </div>
 
-</div>
+  <script type="module">
+    import { LocalNotifications } from
+      '@capacitor/local-notifications';
 
-<footer>
-  PillReminder App • Your health, your schedule
-</footer>
+    import { Capacitor } from
+      '@capacitor/core';
 
-<script>
+    const STORAGE_KEY = 'pillReminderMedicines';
 
-let medicines = JSON.parse(
-  localStorage.getItem("pillMedicines") || "[]"
-);
+    let medicines = [];
 
-function saveMedicines() {
-  localStorage.setItem(
-    "pillMedicines",
-    JSON.stringify(medicines)
-  );
-}
-
-function addMedicine() {
-
-  const name = document.getElementById("medicineName").value.trim();
-  const time = document.getElementById("medicineTime").value;
-
-  if (!name || !time) {
-    alert("Please enter medicine name and time.");
-    return;
-  }
-
-  medicines.push({
-    id: Date.now(),
-    name: name,
-    time: time,
-    taken: false
-  });
-
-  saveMedicines();
-  displayMedicines();
-
-  document.getElementById("medicineName").value = "";
-  document.getElementById("medicineTime").value = "";
-}
-
-function markTaken(id) {
-
-  medicines = medicines.map(medicine => {
-    if (medicine.id === id) {
-      medicine.taken = !medicine.taken;
+    try {
+      medicines = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || '[]'
+      );
+    } catch {
+      medicines = [];
     }
-    return medicine;
-  });
 
-  saveMedicines();
-  displayMedicines();
-}
+    function saveMedicines() {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(medicines)
+      );
+    }
 
-function deleteMedicine(id) {
+    function showMessage(message) {
+      document.getElementById('message').textContent = message;
+    }
 
-  if (!confirm("Delete this medicine reminder?")) return;
+    async function getNotificationPermission() {
+      if (!Capacitor.isNativePlatform()) {
+        return false;
+      }
 
-  medicines = medicines.filter(
-    medicine => medicine.id !== id
-  );
+      let permission =
+        await LocalNotifications.checkPermissions();
 
-  saveMedicines();
-  displayMedicines();
-}
+      if (permission.display !== 'granted') {
+        permission =
+          await LocalNotifications.requestPermissions();
+      }
 
-function displayMedicines() {
+      return permission.display === 'granted';
+    }
 
-  const list = document.getElementById("medicineList");
+    async function scheduleReminder(medicine) {
+      if (!Capacitor.isNativePlatform()) {
+        return false;
+      }
 
-  if (medicines.length === 0) {
-    list.innerHTML =
-      '<p class="empty">No medicines added yet.</p>';
-    return;
-  }
+      const allowed = await getNotificationPermission();
 
-  list.innerHTML = "";
+      if (!allowed) {
+        return false;
+      }
 
-  medicines.forEach(medicine => {
+      const [hour, minute] = medicine.time
+        .split(':')
+        .map(Number);
 
-    const item = document.createElement("div");
-    item.className = "medicine";
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id: medicine.id,
+            title: '💊 Time for your medicine',
+            body: 'Reminder: ' + medicine.name,
+            schedule: {
+              on: {
+                hour: hour,
+                minute: minute
+              },
+              allowWhileIdle: true
+            }
+          }
+        ]
+      });
 
-    const heading = document.createElement("h3");
-    heading.textContent = "💊 " + medicine.name;
+      return true;
+    }
 
-    const time = document.createElement("p");
-    time.className = "time";
-    time.textContent = "⏰ " + medicine.time;
+    async function cancelReminder(id) {
+      if (!Capacitor.isNativePlatform()) {
+        return;
+      }
 
-    const status = document.createElement("p");
-    status.textContent = medicine.taken
-      ? "✓ Marked as taken"
-      : "Not taken yet";
+      try {
+        await LocalNotifications.cancel({
+          notifications: [{ id: id }]
+        });
+      } catch (error) {
+        console.error('Could not cancel reminder:', error);
+      }
+    }
 
-    const takenButton = document.createElement("button");
-    takenButton.className = "taken";
-    takenButton.textContent = medicine.taken
-      ? "Undo"
-      : "Mark as Taken";
+    async function addMedicine() {
+      const name = document
+        .getElementById('medicineName')
+        .value.trim();
 
-    takenButton.onclick = () => markTaken(medicine.id);
+      const time = document
+        .getElementById('medicineTime')
+        .value;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "delete";
-    deleteButton.textContent = "Delete";
-    deleteButton.onclick = () => deleteMedicine(medicine.id);
+      if (!name || !time) {
+        showMessage('Please enter medicine name and time.');
+        return;
+      }
 
-    item.appendChild(heading);
-    item.appendChild(time);
-    item.appendChild(status);
-    item.appendChild(takenButton);
-    item.appendChild(deleteButton);
+      let id;
 
-    list.appendChild(item);
-  });
-}
+      do {
+        id = Math.floor(Math.random() * 2000000000) + 1;
+      } while (medicines.some(m => m.id === id));
 
-displayMedicines();
+      const medicine = {
+        id: id,
+        name: name,
+        time: time,
+        takenDate: ''
+      };
 
-</script>
+      medicines.push(medicine);
+      saveMedicines();
+      displayMedicines();
 
+      document.getElementById('medicineName').value = '';
+      document.getElementById('medicineTime').value = '';
+
+      try {
+        const scheduled = await scheduleReminder(medicine);
+
+        if (scheduled) {
+          showMessage('Medicine added and daily reminder scheduled!');
+        } else if (Capacitor.isNativePlatform()) {
+          showMessage('Medicine saved, but notification permission was not granted.');
+        } else {
+          showMessage('Medicine saved. Install the Android app for notifications.');
+        }
+      } catch (error) {
+        console.error(error);
+        showMessage('Medicine saved, but reminder could not be scheduled.');
+      }
+    }
+
+    function markTaken(id) {
+      const medicine = medicines.find(m => m.id === id);
+
+      if (!medicine) return;
+
+      medicine.takenDate = new Date().toDateString();
+
+      saveMedicines();
+      displayMedicines();
+    }
+
+    async function deleteMedicine(id) {
+      await cancelReminder(id);
+
+      medicines = medicines.filter(m => m.id !== id);
+
+      saveMedicines();
+      displayMedicines();
+
+      showMessage('Medicine and its reminder deleted.');
+    }
+
+    function displayMedicines() {
+      const list = document.getElementById('medicineList');
+
+      list.innerHTML = '';
+
+      if (medicines.length === 0) {
+        list.innerHTML = '<p>No medicines added yet.</p>';
+        return;
+      }
+
+      medicines.forEach(medicine => {
+        const card = document.createElement('div');
+        card.className = 'medicine';
+
+        const heading = document.createElement('h3');
+        heading.textContent = '💊 ' + medicine.name;
+
+        const time = document.createElement('p');
+        time.textContent = '⏰ ' + medicine.time;
+
+        const status = document.createElement('p');
+
+        const takenToday =
+          medicine.takenDate === new Date().toDateString();
+
+        status.textContent = takenToday
+          ? 'Status: Taken today'
+          : 'Status: Not taken today';
+
+        const takenButton = document.createElement('button');
+        takenButton.className = 'taken';
+        takenButton.textContent = takenToday
+          ? 'Taken'
+          : 'Mark as Taken';
+
+        takenButton.disabled = takenToday;
+        takenButton.onclick = () => markTaken(medicine.id);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete';
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = () => deleteMedicine(medicine.id);
+
+        card.append(
+          heading,
+          time,
+          status,
+          takenButton,
+          deleteButton
+        );
+
+        list.appendChild(card);
+      });
+    }
+
+    displayMedicines();
+
+  </script>
 </body>
 </html>
