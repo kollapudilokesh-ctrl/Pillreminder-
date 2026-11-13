@@ -2,355 +2,854 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pill Reminder</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PillReminder</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<style>
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-    body {
-      margin: 0;
-      padding: 20px;
-      background: #f1f5f9;
-      color: #1e293b;
-    }
+body {
+  margin: 0;
+  background: #f3f6fc;
+  color: #172033;
+}
 
-    .container {
-      max-width: 480px;
-      margin: 20px auto;
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px #00000012;
-    }
+header {
+  background: linear-gradient(135deg, #315bea, #7555dc);
+  color: white;
+  padding: 25px 20px 30px;
+  border-radius: 0 0 25px 25px;
+}
 
-    h1 {
-      text-align: center;
-      color: #2563eb;
-    }
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    label {
-      display: block;
-      margin-top: 16px;
-      font-weight: bold;
-    }
+header h1 {
+  margin: 0;
+  font-size: 25px;
+}
 
-    input {
-      width: 100%;
-      padding: 13px;
-      margin-top: 7px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 16px;
-    }
+header p {
+  margin-bottom: 0;
+  opacity: .9;
+}
 
-    button {
-      border: 0;
-      padding: 12px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 15px;
-      margin-top: 12px;
-    }
+.container {
+  max-width: 520px;
+  margin: auto;
+  padding: 18px;
+  padding-bottom: 100px;
+}
 
-    .add {
-      width: 100%;
-      background: #2563eb;
-      color: white;
-    }
+.page {
+  display: none;
+}
 
-    .taken {
-      background: #16a34a;
-      color: white;
-    }
+.page.active {
+  display: block;
+}
 
-    .delete {
-      background: #dc2626;
-      color: white;
-    }
+.section-title {
+  font-size: 20px;
+  margin: 22px 0 13px;
+}
 
-    .medicine {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      padding: 14px;
-      border-radius: 10px;
-      margin-top: 12px;
-    }
+.card {
+  background: white;
+  padding: 17px;
+  border-radius: 17px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 15px #1720330b;
+}
 
-    .medicine h3 {
-      margin: 0 0 8px;
-    }
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: -5px;
+}
 
-    .message {
-      margin-top: 14px;
-      padding: 10px;
-      border-radius: 8px;
-      background: #eff6ff;
-      overflow-wrap: anywhere;
-    }
+.stat {
+  background: white;
+  padding: 17px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px #1720330b;
+}
 
-    .small {
-      color: #64748b;
-      font-size: 13px;
-      text-align: center;
-      margin-top: 18px;
-    }
-  </style>
+.stat strong {
+  display: block;
+  font-size: 25px;
+  color: #385ce8;
+  margin-top: 7px;
+}
+
+.stat span {
+  color: #68748a;
+  font-size: 13px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 7px 0 14px;
+  border: 1px solid #dce2ee;
+  border-radius: 10px;
+  font-size: 16px;
+  background: #fafbff;
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+button {
+  border: none;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primary {
+  background: #385ce8;
+  color: white;
+}
+
+.secondary {
+  background: #edf1ff;
+  color: #385ce8;
+}
+
+.danger {
+  background: #fff0f0;
+  color: #d43b3b;
+}
+
+.success {
+  background: #e6f8ef;
+  color: #16844d;
+}
+
+.full {
+  width: 100%;
+}
+
+.medicine {
+  background: white;
+  border-radius: 15px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 15px #1720330b;
+}
+
+.medicine-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.medicine h3 {
+  margin: 0 0 7px;
+  font-size: 17px;
+}
+
+.medicine p {
+  margin: 5px 0;
+  color: #68748a;
+  font-size: 14px;
+}
+
+.medicine-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.status {
+  font-size: 12px;
+  padding: 6px 9px;
+  border-radius: 20px;
+  background: #fff3dc;
+  color: #a56b00;
+}
+
+.status.done {
+  background: #e6f8ef;
+  color: #16844d;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 5px;
+  box-shadow: 0 -4px 20px #17203312;
+  z-index: 5;
+}
+
+.nav-btn {
+  background: transparent;
+  color: #8992a5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+}
+
+.nav-btn.active {
+  color: #385ce8;
+  font-weight: bold;
+}
+
+.nav-icon {
+  font-size: 21px;
+}
+
+.calendar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.calendar-head h3 {
+  margin: 0;
+}
+
+.month-btn {
+  background: #edf1ff;
+  color: #385ce8;
+  font-size: 20px;
+  padding: 7px 13px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  text-align: center;
+}
+
+.weekday {
+  color: #8992a5;
+  font-size: 12px;
+  padding: 8px 0;
+}
+
+.day {
+  min-height: 43px;
+  border-radius: 10px;
+  background: #f5f7fc;
+  color: #263248;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+  padding: 5px 0;
+}
+
+.day.empty {
+  background: transparent;
+}
+
+.day.today {
+  border: 1px solid #385ce8;
+}
+
+.day.selected {
+  background: #385ce8;
+  color: white;
+}
+
+.day .dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #18a765;
+}
+
+.day.selected .dot {
+  background: white;
+}
+
+.history-entry {
+  border-left: 4px solid #18a765;
+  padding: 12px;
+  background: #f4fbf7;
+  border-radius: 8px;
+  margin-bottom: 9px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 25px 10px;
+  color: #8992a5;
+}
+
+.message {
+  background: #edf1ff;
+  color: #385ce8;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+}
+
+.small {
+  color: #8992a5;
+  font-size: 12px;
+  line-height: 1.5;
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>💊 Pill Reminder</h1>
 
-    <label for="medicineName">Medicine name</label>
-    <input
-      id="medicineName"
-      type="text"
-      placeholder="Enter medicine name"
-    >
+<header>
+  <div class="header-top">
+    <h1>💊 PillReminder</h1>
+    <span>✦</span>
+  </div>
+  <p id="headerDate">Your daily medicine companion</p>
+</header>
 
-    <label for="medicineTime">Reminder time</label>
-    <input id="medicineTime" type="time">
+<div class="container">
 
-    <button class="add" id="addButton">
-      Add Daily Reminder
-    </button>
+  <!-- DASHBOARD PAGE -->
+  <section id="dashboardPage" class="page active">
 
-    <div id="message" class="message">
-      Add a medicine and its reminder time.
+    <h2 class="section-title">Today's Overview</h2>
+
+    <div class="stats">
+      <div class="stat">
+        <span>Total medicines</span>
+        <strong id="totalCount">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Marked as taken</span>
+        <strong id="takenCount">0</strong>
+      </div>
     </div>
 
-    <h2>My Medicines</h2>
-    <div id="medicineList"></div>
+    <h2 class="section-title">Today's Medicines</h2>
 
-    <p class="small">
-      Reminders are scheduled on this device.
-    </p>
-  </div>
+    <div id="todayMedicines"></div>
 
-  <script type="module">
-    import { Capacitor } from '@capacitor/core';
-    import { LocalNotifications } from '@capacitor/local-notifications';
+    <div class="card">
+      <h3>Add a Medicine</h3>
 
-    const nameInput = document.getElementById('medicineName');
-    const timeInput = document.getElementById('medicineTime');
-    const addButton = document.getElementById('addButton');
-    const medicineList = document.getElementById('medicineList');
-    const message = document.getElementById('message');
+      <label for="medicineName">Medicine name</label>
+      <input id="medicineName" type="text"
+        placeholder="Enter medicine name">
 
-    let medicines = [];
+      <label for="medicineTime">Daily reminder time</label>
+      <input id="medicineTime" type="time">
 
-    try {
-      medicines = JSON.parse(
-        localStorage.getItem('pillMedicines') || '[]'
-      );
-    } catch {
-      medicines = [];
-    }
+      <button class="primary full" id="addButton">
+        + Add Daily Reminder
+      </button>
+    </div>
 
-    function showMessage(text) {
-      message.textContent = text;
-    }
+    <div id="message" class="message">
+      Welcome! Add your first medicine.
+    </div>
 
-    function saveMedicines() {
-      localStorage.setItem(
-        'pillMedicines',
-        JSON.stringify(medicines)
-      );
-    }
+  </section>
 
-    async function getPermission() {
-      if (!Capacitor.isNativePlatform()) {
-        throw new Error(
-          'Open this app from its installed Android APK.'
-        );
+  <!-- HISTORY PAGE -->
+  <section id="historyPage" class="page">
+
+    <h2 class="section-title">Medicine History</h2>
+
+    <div class="card">
+
+      <div class="calendar-head">
+        <button class="month-btn" id="previousMonth">‹</button>
+        <h3 id="monthTitle">Month Year</h3>
+        <button class="month-btn" id="nextMonth">›</button>
+      </div>
+
+      <div class="calendar-grid" id="calendar">
+      </div>
+
+      <p class="small">
+        🟢 Green dot = at least one medicine marked as taken.
+        Tap a date to view its history.
+      </p>
+
+    </div>
+
+    <div class="card">
+      <h3 id="selectedDateTitle">Selected date</h3>
+      <div id="selectedDateHistory"></div>
+    </div>
+
+  </section>
+
+</div>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+
+  <button class="nav-btn active" id="dashboardNav">
+    <span class="nav-icon">⌂</span>
+    Dashboard
+  </button>
+
+  <button class="nav-btn" id="historyNav">
+    <span class="nav-icon">▦</span>
+    History
+  </button>
+
+</nav>
+
+<script type="module">
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
+
+const $ = id => document.getElementById(id);
+
+function localDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function todayKey() {
+  return localDateKey(new Date());
+}
+
+function readStorage(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+let medicines = readStorage('pillMedicines', []);
+let history = readStorage('pillHistory', {});
+
+let selectedDate = todayKey();
+const today = new Date();
+let calendarMonth = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  1
+);
+
+function saveData() {
+  localStorage.setItem('pillMedicines', JSON.stringify(medicines));
+  localStorage.setItem('pillHistory', JSON.stringify(history));
+}
+
+function showMessage(text) {
+  $('message').textContent = text;
+}
+
+function showPage(page) {
+  $('dashboardPage').classList.toggle(
+    'active', page === 'dashboard'
+  );
+
+  $('historyPage').classList.toggle(
+    'active', page === 'history'
+  );
+
+  $('dashboardNav').classList.toggle(
+    'active', page === 'dashboard'
+  );
+
+  $('historyNav').classList.toggle(
+    'active', page === 'history'
+  );
+
+  if (page === 'history') {
+    renderCalendar();
+    renderSelectedHistory();
+  }
+}
+
+$('dashboardNav').addEventListener('click', () => {
+  showPage('dashboard');
+});
+
+$('historyNav').addEventListener('click', () => {
+  showPage('history');
+});
+
+async function requestNotificationPermission() {
+  if (!Capacitor.isNativePlatform()) {
+    throw new Error(
+      'Please open the installed Android APK.'
+    );
+  }
+
+  let permission =
+    await LocalNotifications.checkPermissions();
+
+  if (permission.display !== 'granted') {
+    permission =
+      await LocalNotifications.requestPermissions();
+  }
+
+  if (permission.display !== 'granted') {
+    throw new Error('Notification permission was not granted.');
+  }
+}
+
+async function scheduleReminder(medicine) {
+  await requestNotificationPermission();
+
+  const [hour, minute] = medicine.time.split(':').map(Number);
+
+  await LocalNotifications.schedule({
+    notifications: [{
+      id: medicine.id,
+      title: '💊 Medicine Reminder',
+      body: 'Time for: ' + medicine.name,
+      schedule: {
+        on: {
+          hour,
+          minute
+        },
+        allowWhileIdle: true
       }
+    }]
+  });
+}
 
-      let permission =
-        await LocalNotifications.checkPermissions();
+async function addMedicine() {
+  const name = $('medicineName').value.trim();
+  const time = $('medicineTime').value;
 
-      if (permission.display !== 'granted') {
-        permission =
-          await LocalNotifications.requestPermissions();
-      }
+  if (!name || !time) {
+    showMessage('Enter the medicine name and reminder time.');
+    return;
+  }
 
-      if (permission.display !== 'granted') {
-        throw new Error(
-          'Notification permission was not granted.'
-        );
-      }
+  const medicine = {
+    id: Math.floor(Date.now() % 2000000000),
+    name,
+    time
+  };
 
-      let exact =
-        await LocalNotifications.checkExactNotificationSetting();
+  medicines.push(medicine);
+  saveData();
+  renderDashboard();
 
-      if (exact.exact_alarm !== 'granted') {
-        exact =
-          await LocalNotifications.changeExactNotificationSetting();
-      }
+  $('medicineName').value = '';
+  $('medicineTime').value = '';
 
-      if (exact.exact_alarm !== 'granted') {
-        throw new Error(
-          'Exact alarm permission is not enabled. Enable it in Android settings.'
-        );
-      }
-    }
+  try {
+    showMessage('Setting up your daily reminder...');
+    await scheduleReminder(medicine);
+    showMessage('Daily reminder scheduled for ' + name + '.');
+  } catch (error) {
+    console.error(error);
+    showMessage(
+      'Medicine saved, but reminder failed: ' +
+      (error?.message || String(error))
+    );
+  }
+}
 
-    async function scheduleReminder(medicine) {
-      await getPermission();
+$('addButton').addEventListener('click', addMedicine);
 
-      const [hour, minute] =
-        medicine.time.split(':').map(Number);
+function isTaken(medicineId, dateKey) {
+  const records = history[dateKey] || [];
+  return records.some(
+    record => record.medicineId === medicineId
+  );
+}
 
-      await LocalNotifications.schedule({
-        notifications: [
-          {
-            id: medicine.id,
-            title: '💊 Medicine Reminder',
-            body: 'It is time for: ' + medicine.name,
-            schedule: {
-              on: {
-                hour: hour,
-                minute: minute
-              },
-              allowWhileIdle: true
-            }
-          }
-        ]
+function markTaken(medicine) {
+  const dateKey = todayKey();
+
+  if (!history[dateKey]) {
+    history[dateKey] = [];
+  }
+
+  const alreadyTaken = isTaken(medicine.id, dateKey);
+
+  if (alreadyTaken) {
+    history[dateKey] = history[dateKey].filter(
+      record => record.medicineId !== medicine.id
+    );
+  } else {
+    history[dateKey].push({
+      medicineId: medicine.id,
+      medicineName: medicine.name,
+      time: new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    });
+  }
+
+  saveData();
+  renderDashboard();
+}
+
+async function deleteMedicine(id) {
+  try {
+    if (Capacitor.isNativePlatform()) {
+      await LocalNotifications.cancel({
+        notifications: [{ id }]
       });
     }
+  } catch (error) {
+    console.error('Notification cancellation error:', error);
+  }
 
-    async function addMedicine() {
-      const name = nameInput.value.trim();
-      const time = timeInput.value;
+  medicines = medicines.filter(m => m.id !== id);
 
-      if (!name || !time) {
-        showMessage('Please enter the medicine name and time.');
-        return;
-      }
+  // Keep old history records even after a medicine is deleted.
+  saveData();
+  renderDashboard();
+  showMessage('Medicine deleted. Previous history is preserved.');
+}
 
-      const medicine = {
-        id: Math.floor(Date.now() % 2000000000),
-        name: name,
-        time: time,
-        taken: false
-      };
+function renderDashboard() {
+  const dateKey = todayKey();
 
-      medicines.push(medicine);
-      saveMedicines();
-      renderMedicines();
+  const taken = medicines.filter(
+    medicine => isTaken(medicine.id, dateKey)
+  ).length;
 
-      try {
-        showMessage('Requesting notification permissions...');
+  $('totalCount').textContent = medicines.length;
+  $('takenCount').textContent = taken;
 
-        await scheduleReminder(medicine);
+  $('headerDate').textContent =
+    new Date().toLocaleDateString(undefined, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
 
-        showMessage(
-          'Daily reminder scheduled for ' + name + ' at ' + time
-        );
+  const list = $('todayMedicines');
+  list.innerHTML = '';
 
-        nameInput.value = '';
-        timeInput.value = '';
+  if (medicines.length === 0) {
+    list.innerHTML =
+      '<div class="card empty-state">💊<br><br>No medicines added yet.<br>Add your first reminder below.</div>';
+    return;
+  }
 
-      } catch (error) {
-        console.error('Reminder error:', error);
+  const sorted = [...medicines].sort(
+    (a, b) => a.time.localeCompare(b.time)
+  );
 
-        showMessage(
-          'Medicine saved, but reminder failed: ' +
-          (error?.message || String(error))
-        );
-      }
+  sorted.forEach(medicine => {
+    const done = isTaken(medicine.id, dateKey);
+
+    const card = document.createElement('div');
+    card.className = 'medicine';
+
+    const top = document.createElement('div');
+    top.className = 'medicine-top';
+
+    const info = document.createElement('div');
+
+    const name = document.createElement('h3');
+    name.textContent = medicine.name;
+
+    const time = document.createElement('p');
+    time.textContent = '🕒 ' + medicine.time;
+
+    info.append(name, time);
+
+    const status = document.createElement('span');
+    status.className = done ? 'status done' : 'status';
+    status.textContent = done ? 'Taken ✓' : 'Pending';
+
+    top.append(info, status);
+
+    const actions = document.createElement('div');
+    actions.className = 'medicine-actions';
+
+    const takenButton = document.createElement('button');
+    takenButton.className = done ? 'secondary' : 'success';
+    takenButton.textContent = done ? 'Undo' : 'Mark as Taken';
+
+    takenButton.addEventListener('click', () => {
+      markTaken(medicine);
+    });
+
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'danger';
+    deleteButton.textContent = 'Delete';
+
+    deleteButton.addEventListener('click', () => {
+      deleteMedicine(medicine.id);
+    });
+
+    actions.append(takenButton, deleteButton);
+    card.append(top, actions);
+    list.appendChild(card);
+  });
+}
+
+function renderCalendar() {
+  const year = calendarMonth.getFullYear();
+  const month = calendarMonth.getMonth();
+
+  $('monthTitle').textContent =
+    calendarMonth.toLocaleDateString(undefined, {
+      month: 'long',
+      year: 'numeric'
+    });
+
+  const calendar = $('calendar');
+  calendar.innerHTML = '';
+
+  ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    .forEach(day => {
+      const heading = document.createElement('div');
+      heading.className = 'weekday';
+      heading.textContent = day;
+      calendar.appendChild(heading);
+    });
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) {
+    const blank = document.createElement('div');
+    blank.className = 'day empty';
+    calendar.appendChild(blank);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const key = localDateKey(date);
+
+    const button = document.createElement('button');
+    button.className = 'day';
+    button.textContent = day;
+
+    if (key === todayKey()) {
+      button.classList.add('today');
     }
 
-    async function deleteMedicine(id) {
-      try {
-        await LocalNotifications.cancel({
-          notifications: [{ id: id }]
-        });
-      } catch (error) {
-        console.error('Cancel error:', error);
-      }
-
-      medicines = medicines.filter(
-        medicine => medicine.id !== id
-      );
-
-      saveMedicines();
-      renderMedicines();
-      showMessage('Medicine deleted.');
+    if (key === selectedDate) {
+      button.classList.add('selected');
     }
 
-    function markTaken(id) {
-      const medicine = medicines.find(
-        item => item.id === id
-      );
+    const records = history[key] || [];
 
-      if (medicine) {
-        medicine.taken = !medicine.taken;
-        saveMedicines();
-        renderMedicines();
-      }
+    if (records.length > 0) {
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      button.appendChild(dot);
     }
 
-    function renderMedicines() {
-      medicineList.innerHTML = '';
+    button.addEventListener('click', () => {
+      selectedDate = key;
+      renderCalendar();
+      renderSelectedHistory();
+    });
 
-      if (medicines.length === 0) {
-        medicineList.textContent = 'No medicines added yet.';
-        return;
-      }
+    calendar.appendChild(button);
+  }
+}
 
-      medicines.forEach(medicine => {
-        const card = document.createElement('div');
-        card.className = 'medicine';
+function renderSelectedHistory() {
+  const date = new Date(selectedDate + 'T12:00:00');
 
-        const heading = document.createElement('h3');
-        heading.textContent = medicine.name;
+  $('selectedDateTitle').textContent =
+    date.toLocaleDateString(undefined, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
 
-        const time = document.createElement('p');
-        time.textContent = 'Time: ' + medicine.time;
+  const area = $('selectedDateHistory');
+  area.innerHTML = '';
 
-        const status = document.createElement('p');
-        status.textContent = medicine.taken
-          ? 'Status: Taken'
-          : 'Status: Not marked as taken';
+  const records = history[selectedDate] || [];
 
-        const takenButton = document.createElement('button');
-        takenButton.className = 'taken';
-        takenButton.textContent = medicine.taken
-          ? 'Undo'
-          : 'Mark as Taken';
+  if (records.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.textContent =
+      'No medicines were marked as taken on this date.';
+    area.appendChild(empty);
+    return;
+  }
 
-        takenButton.addEventListener('click', () => {
-          markTaken(medicine.id);
-        });
+  records.forEach(record => {
+    const entry = document.createElement('div');
+    entry.className = 'history-entry';
 
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'delete';
-        deleteButton.textContent = 'Delete';
+    const name = document.createElement('strong');
+    name.textContent = '✓ ' + record.medicineName;
 
-        deleteButton.addEventListener('click', () => {
-          deleteMedicine(medicine.id);
-        });
+    const time = document.createElement('p');
+    time.textContent = 'Recorded at ' + record.time;
 
-        card.append(
-          heading,
-          time,
-          status,
-          takenButton,
-          deleteButton
-        );
+    entry.append(name, time);
+    area.appendChild(entry);
+  });
+}
 
-        medicineList.appendChild(card);
-      });
-    }
+$('previousMonth').addEventListener('click', () => {
+  calendarMonth = new Date(
+    calendarMonth.getFullYear(),
+    calendarMonth.getMonth() - 1,
+    1
+  );
+  renderCalendar();
+});
 
-    addButton.addEventListener('click', addMedicine);
+$('nextMonth').addEventListener('click', () => {
+  const next = new Date(
+    calendarMonth.getFullYear(),
+    calendarMonth.getMonth() + 1,
+    1
+  );
 
-    renderMedicines();
-  </script>
+  // Don't allow navigating into future months.
+  const currentMonth = new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    1
+  );
+
+  if (next <= currentMonth) {
+    calendarMonth = next;
+    renderCalendar();
+  }
+});
+
+renderDashboard();
+renderCalendar();
+renderSelectedHistory();
+</script>
+
 </body>
-</html>
+  </html>
+        
