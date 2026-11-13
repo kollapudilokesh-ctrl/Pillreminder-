@@ -59,7 +59,10 @@
       background: #2563eb;
       color: white;
       font-weight: bold;
-      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
     }
 
     .medicine {
@@ -67,14 +70,6 @@
       padding: 15px;
       border-radius: 10px;
       margin-top: 12px;
-    }
-
-    .medicine h3 {
-      margin: 0 0 8px;
-    }
-
-    .medicine p {
-      margin: 5px 0;
     }
 
     .taken {
@@ -87,7 +82,6 @@
 
     #message {
       text-align: center;
-      margin-top: 12px;
       color: #475569;
     }
   </style>
@@ -109,13 +103,12 @@
       >
 
       <label for="medicineTime">Reminder time:</label>
+
       <input type="time" id="medicineTime">
 
-      <button onclick="addMedicine()">
-        Add Medicine
-      </button>
+      <button id="addButton">Add Medicine</button>
 
-      <p id="message"></p>
+      <p id="message" role="status"></p>
     </div>
 
     <div class="panel">
@@ -126,6 +119,7 @@
   </div>
 
   <script type="module">
+
     import { LocalNotifications } from
       '@capacitor/local-notifications';
 
@@ -140,8 +134,28 @@
       medicines = JSON.parse(
         localStorage.getItem(STORAGE_KEY) || '[]'
       );
+
+      if (!Array.isArray(medicines)) {
+        medicines = [];
+      }
     } catch {
       medicines = [];
+    }
+
+    const nameInput =
+      document.getElementById('medicineName');
+
+    const timeInput =
+      document.getElementById('medicineTime');
+
+    const list =
+      document.getElementById('medicineList');
+
+    const message =
+      document.getElementById('message');
+
+    function showMessage(text) {
+      message.textContent = text;
     }
 
     function saveMedicines() {
@@ -151,62 +165,54 @@
       );
     }
 
-    function showMessage(message) {
-      document.getElementById('message').textContent = message;
-    }
+    async function getPermission() {
 
-    async function getNotificationPermission() {
       if (!Capacitor.isNativePlatform()) {
         return false;
       }
 
-      let permission =
+      let result =
         await LocalNotifications.checkPermissions();
 
-      if (permission.display !== 'granted') {
-        permission =
+      if (result.display !== 'granted') {
+        result =
           await LocalNotifications.requestPermissions();
       }
 
-      return permission.display === 'granted';
+      return result.display === 'granted';
     }
 
     async function scheduleReminder(medicine) {
-      if (!Capacitor.isNativePlatform()) {
-        return false;
-      }
 
-      const allowed = await getNotificationPermission();
+      const allowed = await getPermission();
 
       if (!allowed) {
         return false;
       }
 
-      const [hour, minute] = medicine.time
-        .split(':')
-        .map(Number);
+      const [hour, minute] =
+        medicine.time.split(':').map(Number);
 
       await LocalNotifications.schedule({
-        notifications: [
-          {
-            id: medicine.id,
-            title: '💊 Time for your medicine',
-            body: 'Reminder: ' + medicine.name,
-            schedule: {
-              on: {
-                hour: hour,
-                minute: minute
-              },
-              allowWhileIdle: true
-            }
+        notifications: [{
+          id: medicine.id,
+          title: '💊 Time to take your medicine!',
+          body: 'Reminder: ' + medicine.name,
+          schedule: {
+            on: {
+              hour: hour,
+              minute: minute
+            },
+            allowWhileIdle: true
           }
-        ]
+        }]
       });
 
       return true;
     }
 
     async function cancelReminder(id) {
+
       if (!Capacitor.isNativePlatform()) {
         return;
       }
@@ -216,21 +222,17 @@
           notifications: [{ id: id }]
         });
       } catch (error) {
-        console.error('Could not cancel reminder:', error);
+        console.error(error);
       }
     }
 
     async function addMedicine() {
-      const name = document
-        .getElementById('medicineName')
-        .value.trim();
 
-      const time = document
-        .getElementById('medicineTime')
-        .value;
+      const name = nameInput.value.trim();
+      const time = timeInput.value;
 
       if (!name || !time) {
-        showMessage('Please enter medicine name and time.');
+        showMessage('Enter medicine name and time.');
         return;
       }
 
@@ -238,7 +240,7 @@
 
       do {
         id = Math.floor(Math.random() * 2000000000) + 1;
-      } while (medicines.some(m => m.id === id));
+      } while (medicines.some(item => item.id === id));
 
       const medicine = {
         id: id,
@@ -248,61 +250,72 @@
       };
 
       medicines.push(medicine);
+
       saveMedicines();
       displayMedicines();
 
-      document.getElementById('medicineName').value = '';
-      document.getElementById('medicineTime').value = '';
+      nameInput.value = '';
+      timeInput.value = '';
 
       try {
         const scheduled = await scheduleReminder(medicine);
 
         if (scheduled) {
-          showMessage('Medicine added and daily reminder scheduled!');
+          showMessage('Medicine saved! Daily reminder scheduled.');
         } else if (Capacitor.isNativePlatform()) {
-          showMessage('Medicine saved, but notification permission was not granted.');
+          showMessage('Saved, but notification permission is not enabled.');
         } else {
-          showMessage('Medicine saved. Install the Android app for notifications.');
+          showMessage('Saved. Install the Android app to receive notifications.');
         }
+
       } catch (error) {
         console.error(error);
-        showMessage('Medicine saved, but reminder could not be scheduled.');
+        showMessage('Saved, but reminder scheduling failed.');
       }
     }
 
     function markTaken(id) {
-      const medicine = medicines.find(m => m.id === id);
+
+      const medicine = medicines.find(
+        item => item.id === id
+      );
 
       if (!medicine) return;
 
-      medicine.takenDate = new Date().toDateString();
+      medicine.takenDate =
+        new Date().toDateString();
 
       saveMedicines();
       displayMedicines();
+
+      showMessage('Marked as taken!');
     }
 
     async function deleteMedicine(id) {
+
       await cancelReminder(id);
 
-      medicines = medicines.filter(m => m.id !== id);
+      medicines = medicines.filter(
+        item => item.id !== id
+      );
 
       saveMedicines();
       displayMedicines();
 
-      showMessage('Medicine and its reminder deleted.');
+      showMessage('Medicine and reminder deleted.');
     }
 
     function displayMedicines() {
-      const list = document.getElementById('medicineList');
 
       list.innerHTML = '';
 
       if (medicines.length === 0) {
-        list.innerHTML = '<p>No medicines added yet.</p>';
+        list.textContent = 'No medicines added yet.';
         return;
       }
 
       medicines.forEach(medicine => {
+
         const card = document.createElement('div');
         card.className = 'medicine';
 
@@ -312,28 +325,37 @@
         const time = document.createElement('p');
         time.textContent = '⏰ ' + medicine.time;
 
-        const status = document.createElement('p');
-
         const takenToday =
           medicine.takenDate === new Date().toDateString();
+
+        const status = document.createElement('p');
 
         status.textContent = takenToday
           ? 'Status: Taken today'
           : 'Status: Not taken today';
 
         const takenButton = document.createElement('button');
+
         takenButton.className = 'taken';
+
         takenButton.textContent = takenToday
           ? 'Taken'
           : 'Mark as Taken';
 
         takenButton.disabled = takenToday;
-        takenButton.onclick = () => markTaken(medicine.id);
+
+        takenButton.addEventListener('click', () => {
+          markTaken(medicine.id);
+        });
 
         const deleteButton = document.createElement('button');
+
         deleteButton.className = 'delete';
         deleteButton.textContent = 'Delete';
-        deleteButton.onclick = () => deleteMedicine(medicine.id);
+
+        deleteButton.addEventListener('click', () => {
+          deleteMedicine(medicine.id);
+        });
 
         card.append(
           heading,
@@ -346,6 +368,10 @@
         list.appendChild(card);
       });
     }
+
+    document
+      .getElementById('addButton')
+      .addEventListener('click', addMedicine);
 
     displayMedicines();
 
