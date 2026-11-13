@@ -1,89 +1,267 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#385ce8">
 <title>PillReminder</title>
+
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#f3f6fc;color:#172033}
-header{background:linear-gradient(135deg,#315bea,#7555dc);color:white;padding:25px 20px 30px;border-radius:0 0 25px 25px}
-.header-top{display:flex;justify-content:space-between;align-items:center}
-header h1{margin:0;font-size:25px}
-header p{margin-bottom:0;opacity:.9}
-.container{max-width:520px;margin:auto;padding:18px;padding-bottom:100px}
-.page{display:none}
-.page.active{display:block}
-.section-title{font-size:20px;margin:22px 0 13px}
-.card{background:white;padding:17px;border-radius:17px;margin-bottom:14px;box-shadow:0 4px 15px #1720330b}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:-5px}
-.stat{background:white;padding:17px;border-radius:16px;box-shadow:0 4px 15px #1720330b}
-.stat strong{display:block;font-size:25px;color:#385ce8;margin-top:7px}
-.stat span{color:#68748a;font-size:13px}
-input{width:100%;padding:13px;margin:7px 0 12px;border:1px solid #dce2ee;border-radius:10px;font-size:16px;background:#fafbff;color:#172033}
-label{font-size:14px;font-weight:bold}
-button{border:none;padding:12px 15px;border-radius:10px;font-size:14px;cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
-.primary{background:#385ce8;color:white}
-.secondary{background:#edf1ff;color:#385ce8}
-.danger{background:#fff0f0;color:#d43b3b}
-.success{background:#e6f8ef;color:#16844d}
-.full{width:100%}
-.medicine{background:white;border-radius:15px;padding:16px;margin-bottom:12px;box-shadow:0 4px 15px #1720330b}
-.medicine-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.medicine h3{margin:0 0 7px;font-size:17px}
-.medicine p{margin:5px 0;color:#68748a;font-size:14px}
-.medicine-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.status{font-size:12px;padding:6px 9px;border-radius:20px;background:#fff3dc;color:#a56b00;white-space:nowrap}
-.status.done{background:#e6f8ef;color:#16844d}
-.status.missed{background:#fff0f0;color:#c23a3a}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:12px 5px;box-shadow:0 -4px 20px #17203312;z-index:5}
-.nav-btn{background:transparent;color:#8992a5;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:12px}
-.nav-btn.active{color:#385ce8;font-weight:bold}
-.nav-icon{font-size:21px}
-.calendar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-.calendar-head h3{margin:0}
-.month-btn{background:#edf1ff;color:#385ce8;font-size:20px;padding:7px 13px}
-.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}
-.weekday{color:#8992a5;font-size:12px;padding:8px 0}
-.day{min-height:43px;border-radius:10px;background:#f5f7fc;color:#263248;position:relative;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:3px;padding:5px 0}
-.day.empty{background:transparent}
-.day.today{border:1px solid #385ce8}
-.day.selected{background:#385ce8;color:white}
-.day .dot{width:5px;height:5px;border-radius:50%;background:#18a765}
-.day.selected .dot{background:white}
-.history-entry{border-left:4px solid #18a765;padding:12px;background:#f4fbf7;border-radius:8px;margin-bottom:9px}
-.history-entry.missed-entry{border-color:#d43b3b;background:#fff6f5}
-.empty-state{text-align:center;padding:25px 10px;color:#8992a5}
-.message{background:#edf1ff;color:#385ce8;padding:12px;border-radius:10px;margin:12px 0;overflow-wrap:anywhere;font-size:13px}
-.small{color:#8992a5;font-size:12px;line-height:1.5}
-.time-row{display:flex;gap:8px;align-items:center;margin:5px 0}
-.time-row input{margin:0;flex:1}
-.time-chip{display:inline-flex;align-items:center;gap:5px;background:#edf1ff;color:#385ce8;border-radius:20px;padding:7px 10px;margin:3px;font-size:13px}
-.time-chip button{padding:0 3px;background:transparent;color:#385ce8;font-size:17px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.file-label{display:block;text-align:center;padding:12px 15px;border-radius:10px;background:#edf1ff;color:#385ce8;font-weight:bold;font-size:14px;cursor:pointer}
-.file-label input{display:none}
-.inline-buttons{display:flex;gap:8px;flex-wrap:wrap}
-.inline-buttons button{flex:1}
-.warning{background:#fff5df;color:#805b11}
-.good{background:#e7f8ef;color:#176b43}
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+body {
+  margin: 0;
+  background: #f3f6fc;
+  color: #172033;
+}
+header {
+  background: linear-gradient(135deg,#315bea,#7555dc);
+  color: white;
+  padding: 25px 20px 30px;
+  border-radius: 0 0 25px 25px;
+}
+header h1 {
+  margin: 0;
+  font-size: 25px;
+}
+header p {
+  margin-bottom: 0;
+  opacity: .9;
+}
+.container {
+  max-width: 520px;
+  margin: auto;
+  padding: 18px 18px 100px;
+}
+.page { display: none; }
+.page.active { display: block; }
+.section-title {
+  font-size: 20px;
+  margin: 22px 0 13px;
+}
+.card,.medicine,.stat {
+  background: white;
+  padding: 17px;
+  border-radius: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 15px #1720330b;
+}
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.stat span {
+  font-size: 13px;
+  color: #68748a;
+}
+.stat strong {
+  display: block;
+  font-size: 25px;
+  color: #385ce8;
+  margin-top: 7px;
+}
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+input {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin: 7px 0 12px;
+  border: 1px solid #dce2ee;
+  border-radius: 10px;
+  font-size: 16px;
+  background: #fafbff;
+  color: #172033;
+}
+input:focus,button:focus {
+  outline: 2px solid #7895ff;
+  outline-offset: 2px;
+}
+button {
+  border: 0;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.primary { background: #385ce8; color: white; }
+.secondary { background: #edf1ff; color: #385ce8; }
+.danger { background: #fff0f0; color: #d43b3b; }
+.success { background: #e6f8ef; color: #16844d; }
+.full { width: 100%; margin-top: 8px; }
+.small {
+  font-size: 12px;
+  color: #8992a5;
+  line-height: 1.5;
+}
+.time-row,.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.time-row input {
+  flex: 1;
+  min-width: 120px;
+}
+.time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #edf1ff;
+  color: #385ce8;
+  border-radius: 20px;
+  padding: 7px 10px;
+  margin: 3px;
+  font-size: 13px;
+}
+.time-chip button {
+  padding: 0 3px;
+  background: transparent;
+  color: #385ce8;
+  font-size: 18px;
+}
+.medicine h3 { margin: 0 0 7px; }
+.medicine p {
+  font-size: 14px;
+  color: #68748a;
+  margin: 7px 0;
+}
+.actions { margin-top: 12px; }
+.actions button { flex: 1; }
+.status {
+  display: inline-block;
+  font-size: 12px;
+  padding: 6px 9px;
+  border-radius: 20px;
+  background: #fff3dc;
+  color: #a56b00;
+}
+.status.done { background: #e6f8ef; color: #16844d; }
+.status.missed { background: #fff0f0; color: #c23a3a; }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 5px;
+  box-shadow: 0 -4px 20px #17203312;
+  z-index: 10;
+}
+.nav-btn {
+  background: transparent;
+  color: #8992a5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.nav-btn.active {
+  color: #385ce8;
+  font-weight: bold;
+}
+.nav-icon { font-size: 21px; }
+.message {
+  background: #edf1ff;
+  color: #385ce8;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 12px 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+  font-size: 13px;
+}
+.calendar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 5px;
+  text-align: center;
+}
+.weekday {
+  color: #8992a5;
+  font-size: 12px;
+  padding: 8px 0;
+}
+.day {
+  min-height: 40px;
+  border-radius: 9px;
+  background: #f5f7fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+  padding: 4px;
+}
+.day.empty { background: transparent; }
+.day.today { border: 1px solid #385ce8; }
+.day.selected { background: #385ce8; color: white; }
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #18a765;
+}
+.day.selected .dot { background: white; }
+.history-entry {
+  border-left: 4px solid #18a765;
+  padding: 12px;
+  background: #f4fbf7;
+  border-radius: 8px;
+  margin-bottom: 9px;
+  font-size: 14px;
+}
+.history-entry.missed-entry {
+  border-color: #d43b3b;
+  background: #fff6f5;
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.file-label {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #edf1ff;
+  color: #385ce8;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.file-label input { display: none; }
+[hidden] { display: none !important; }
 </style>
 </head>
+
 <body>
 
 <header>
-  <div class="header-top">
-    <h1>💊 PillReminder</h1>
-    <span>✦</span>
-  </div>
+  <h1>💊 PillReminder</h1>
   <p id="headerDate">Your daily medicine companion</p>
 </header>
 
 <div class="container">
 
 <section id="dashboardPage" class="page active">
+
   <h2 class="section-title">Today's Overview</h2>
 
   <div class="stats">
@@ -92,7 +270,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
       <strong id="totalCount">0</strong>
     </div>
     <div class="stat">
-      <span>Doses marked taken</span>
+      <span>Doses taken today</span>
       <strong id="takenCount">0</strong>
     </div>
   </div>
@@ -105,12 +283,14 @@ button:disabled{opacity:.5;cursor:not-allowed}
 
     <label for="medicineName">Medicine name</label>
     <input id="medicineName" type="text" maxlength="70"
-      placeholder="Enter medicine name">
+      placeholder="Enter medicine name" autocomplete="off">
 
-    <label>Daily reminder times</label>
+    <label for="medicineTime">Reminder time</label>
     <div class="time-row">
-      <input id="medicineTime" type="time" aria-label="Reminder time">
-      <button class="secondary" id="addTimeButton" type="button">+ Add time</button>
+      <input id="medicineTime" type="time">
+      <button class="secondary" id="addTimeButton" type="button">
+        + Add time
+      </button>
     </div>
 
     <div id="timeChips"></div>
@@ -121,45 +301,64 @@ button:disabled{opacity:.5;cursor:not-allowed}
         <input id="stockCount" type="number" min="0" step="1" value="0">
       </div>
       <div>
-        <label for="lowStock">Low-stock alert at</label>
+        <label for="lowStock">Low stock alert at</label>
         <input id="lowStock" type="number" min="0" step="1" value="5">
       </div>
     </div>
 
-    <button class="primary full" id="addButton">+ Save Medicine</button>
-    <button class="secondary full" id="cancelEditButton"
-      style="display:none;margin-top:8px">Cancel edit</button>
+    <button class="primary full" id="addButton" type="button">
+      + Save Medicine
+    </button>
 
-    <p class="small">Enter only the schedule and quantity you have been instructed to use. This app does not recommend doses.</p>
+    <button class="secondary full" id="cancelEditButton"
+      type="button" hidden>
+      Cancel edit
+    </button>
+
+    <p class="small">
+      Enter the schedule and quantity you have been instructed to use.
+      This app does not recommend doses.
+    </p>
   </div>
 
   <div class="card">
-    <h3>Notification check</h3>
-    <p class="small">Check Android notification and exact-alarm permissions and confirm whether reminders are queued.</p>
+    <h3>Notification settings</h3>
 
-    <div class="inline-buttons">
-      <button class="secondary" id="checkButton">Check status</button>
-      <button class="primary" id="rescheduleButton">Repair reminders</button>
-    </div>
+    <button class="secondary full" id="permissionButton" type="button">
+      Enable notifications
+    </button>
+
+    <button class="primary full" id="rescheduleButton" type="button">
+      Schedule my reminders
+    </button>
+
+    <button class="secondary full" id="checkButton" type="button">
+      Check notification status
+    </button>
 
     <div id="message" class="message" aria-live="polite">
       Welcome! Add your first medicine.
     </div>
   </div>
+
 </section>
 
 <section id="historyPage" class="page">
+
   <h2 class="section-title">Medicine History</h2>
 
   <div class="card">
     <div class="calendar-head">
-      <button class="month-btn" id="previousMonth">‹</button>
-      <h3 id="monthTitle">Month Year</h3>
-      <button class="month-btn" id="nextMonth">›</button>
+      <button class="secondary" id="previousMonth" type="button">‹</button>
+      <strong id="monthTitle"></strong>
+      <button class="secondary" id="nextMonth" type="button">›</button>
     </div>
 
     <div class="calendar-grid" id="calendar"></div>
-    <p class="small">🟢 Taken · 🔴 Missed · Tap a date to view dose history.</p>
+
+    <p class="small">
+      Green dot = recorded doses. Tap a date to view its history.
+    </p>
   </div>
 
   <div class="card">
@@ -168,42 +367,977 @@ button:disabled{opacity:.5;cursor:not-allowed}
   </div>
 
   <div class="card">
-    <h3>Reports</h3>
-    <div class="grid2">
-      <div>
-        <label for="reportMonth">Report month</label>
-        <input id="reportMonth" type="month">
-      </div>
-      <div style="display:flex;align-items:end">
-        <button class="primary full" id="reportButton">Generate report</button>
-      </div>
-    </div>
+    <h3>Monthly report</h3>
+
+    <label for="reportMonth">Select month</label>
+    <input id="reportMonth" type="month">
+
+    <button class="primary full" id="reportButton" type="button">
+      Generate report
+    </button>
 
     <div id="reportResult" class="message">
-      Choose a month to view recorded doses.
+      Select a month to view your report.
     </div>
 
-    <div class="inline-buttons">
-      <button class="secondary" id="csvButton">Export CSV</button>
-      <button class="secondary" id="backupButton">Backup JSON</button>
-    </div>
+    <button class="secondary full" id="csvButton" type="button">
+      Export history CSV
+    </button>
 
-    <label class="file-label" style="margin-top:9px">
-      Restore backup JSON
-      <input id="restoreFile" type="file" accept="application/json,.json">
+    <button class="secondary full" id="backupButton" type="button">
+      Download JSON backup
+    </button>
+
+    <label class="file-label">
+      Restore JSON backup
+      <input id="restoreFile" type="file" accept=".json,application/json">
     </label>
-
-    <p class="small">Keep a backup before reinstalling the app or changing phones.</p>
   </div>
-</section>
 
+</section>
 </div>
 
 <nav class="bottom-nav">
-  <button class="nav-btn active" id="dashboardNav">
+  <button class="nav-btn active" id="dashboardNav" type="button">
     <span class="nav-icon">⌂</span>Dashboard
   </button>
-  <button class="nav-btn" id="historyNav">
-    <span class="nav-icon">▦</span>History & Reports
+  <button class="nav-btn" id="historyNav" type="button">
+    <span class="nav-icon">▦</span>History
   </button>
-  </nav>
+</nav>
+
+<script type="module">
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { Capacitor } from '@capacitor/core';
+
+/* ELEMENTS AND APP DATA */
+
+const $ = id => document.getElementById(id);
+const isNative = Capacitor.isNativePlatform();
+
+let medicines = [];
+let history = [];
+let times = [];
+let editingId = null;
+let calendarDate = new Date();
+let selectedDate = dateKey(new Date());
+
+function dateKey(date) {
+  return date.getFullYear() + "-" +
+    String(date.getMonth()+1).padStart(2,"0") + "-" +
+    String(date.getDate()).padStart(2,"0");
+}
+
+function todayKey() {
+  return dateKey(new Date());
+}
+
+function saveData() {
+  localStorage.setItem("pillMedicines",JSON.stringify(medicines));
+  localStorage.setItem("pillHistory",JSON.stringify(history));
+}
+
+function showMessage(text) {
+  $("message").textContent = text;
+}
+
+function loadData() {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("pillMedicines") || "[]"
+    );
+    medicines = Array.isArray(saved) ? saved : [];
+  } catch {
+    medicines = [];
+  }
+
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("pillHistory") || "[]"
+    );
+    history = Array.isArray(saved) ? saved : [];
+  } catch {
+    history = [];
+  }
+
+  medicines = medicines.map(m => ({
+    ...m,
+    id: String(m.id || Date.now()+Math.random()),
+    name: String(m.name || "Medicine"),
+    times: Array.isArray(m.times) ? m.times :
+      (m.time ? [m.time] : []),
+    stock: Number(m.stock || 0),
+    lowStock: Number(m.lowStock ?? 5)
+  }));
+}
+
+/* MEDICINE TIME INPUT */
+
+function renderTimeChips() {
+  const root = $("timeChips");
+  root.innerHTML = "";
+
+  times.forEach((time,index) => {
+    const chip = document.createElement("span");
+    chip.className = "time-chip";
+    chip.append(document.createTextNode(time+" "));
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "×";
+    remove.setAttribute("aria-label","Remove "+time);
+
+    remove.addEventListener("click",() => {
+      times.splice(index,1);
+      renderTimeChips();
+    });
+
+    chip.append(remove);
+    root.append(chip);
+  });
+}
+
+$("addTimeButton").addEventListener("click",() => {
+  const time = $("medicineTime").value;
+
+  if (!time) {
+    showMessage("Please select a reminder time first.");
+    $("medicineTime").focus();
+    return;
+  }
+
+  if (times.includes(time)) {
+    showMessage("This reminder time is already added.");
+    return;
+  }
+
+  times.push(time);
+  times.sort();
+  $("medicineTime").value = "";
+  renderTimeChips();
+  showMessage("Reminder time added.");
+});
+
+function resetForm() {
+  editingId = null;
+  times = [];
+
+  $("medicineName").value = "";
+  $("medicineTime").value = "";
+  $("stockCount").value = "0";
+  $("lowStock").value = "5";
+
+  $("formHeading").textContent = "Add a Medicine";
+  $("addButton").textContent = "+ Save Medicine";
+  $("cancelEditButton").hidden = true;
+
+  renderTimeChips();
+}
+
+$("cancelEditButton").addEventListener("click",resetForm);
+
+/* ADD AND EDIT MEDICINES */
+
+$("addButton").addEventListener("click",async() => {
+  const name = $("medicineName").value.trim();
+  const stockText = $("stockCount").value;
+  const lowText = $("lowStock").value;
+
+  if (!name) {
+    showMessage("Please enter a medicine name.");
+    $("medicineName").focus();
+    return;
+  }
+
+  if (times.length === 0) {
+    showMessage("Please add at least one reminder time.");
+    $("medicineTime").focus();
+    return;
+  }
+
+  const stock = Number(stockText);
+  const low = Number(lowText);
+
+  if (
+    stockText === "" || lowText === "" ||
+    !Number.isInteger(stock) || !Number.isInteger(low) ||
+    stock < 0 || low < 0
+  ) {
+    showMessage("Please enter valid stock numbers.");
+    return;
+  }
+
+  const record = {
+    id: editingId || String(Date.now()),
+    name,
+    times: [...times],
+    stock,
+    lowStock: low
+  };
+
+  if (editingId) {
+    medicines = medicines.map(m =>
+      m.id === editingId ? record : m
+    );
+  } else {
+    medicines.push(record);
+  }
+
+  saveData();
+  resetForm();
+  renderAll();
+
+  showMessage("Medicine saved. Schedule your reminders.");
+
+  if (isNative) {
+    await scheduleAll();
+  }
+});
+
+function editMedicine(id) {
+  const medicine = medicines.find(m => m.id === id);
+  if (!medicine) return;
+
+  editingId = id;
+  times = [...medicine.times];
+
+  $("medicineName").value = medicine.name;
+  $("stockCount").value = medicine.stock;
+  $("lowStock").value = medicine.lowStock;
+
+  $("formHeading").textContent = "Edit Medicine";
+  $("addButton").textContent = "Save Changes";
+  $("cancelEditButton").hidden = false;
+
+  renderTimeChips();
+  $("medicineName").scrollIntoView({behavior:"smooth"});
+}
+
+async function deleteMedicine(id) {
+  if (!confirm("Delete this medicine and its reminders?")) return;
+
+  medicines = medicines.filter(m => m.id !== id);
+  saveData();
+  renderAll();
+
+  if (isNative) await scheduleAll();
+
+  showMessage("Medicine deleted.");
+}
+
+/* DOSE HISTORY */
+
+function doseKey(medicine,time,date) {
+  return medicine.id+"|"+date+"|"+time;
+}
+
+function findDose(medicine,time,date) {
+  return history.find(h =>
+    h.key === doseKey(medicine,time,date)
+  );
+}
+
+function markTaken(medicine,time,date=todayKey()) {
+  const key = doseKey(medicine,time,date);
+  let entry = history.find(h => h.key === key);
+
+  if (entry) {
+    if (entry.status !== "Taken" && date === todayKey() &&
+        medicine.stock > 0) {
+      medicine.stock--;
+    }
+    entry.status = "Taken";
+    entry.updatedAt = new Date().toISOString();
+  } else {
+    if (date === todayKey() && medicine.stock > 0) {
+      medicine.stock--;
+    }
+
+    history.push({
+      key,
+      medicineId: medicine.id,
+      name: medicine.name,
+      time,
+      date,
+      status: "Taken",
+      updatedAt: new Date().toISOString()
+    });
+  }
+
+  saveData();
+  renderAll();
+}
+
+function markPending(medicine,time,date=todayKey()) {
+  const entry = findDose(medicine,time,date);
+  if (!entry) return;
+
+  if (entry.status === "Taken" &&
+      date === todayKey() &&
+      medicine.stock >= 0) {
+    medicine.stock++;
+  }
+
+  entry.status = "Pending";
+  saveData();
+  renderAll();
+}
+
+/* MISSED DOSE RECORDING
+   This runs when the app opens or returns to the foreground.
+   It cannot record missed doses while the app is closed. */
+
+function updateMissedDoses() {
+  const now = new Date();
+
+  medicines.forEach(medicine => {
+    medicine.times.forEach(time => {
+      const parts = time.split(":").map(Number);
+      const due = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        parts[0],
+        parts[1]
+      );
+
+      if (now.getTime() < due.getTime()+5*60*1000) return;
+
+      const key = doseKey(medicine,time,todayKey());
+      let entry = history.find(h => h.key === key);
+
+      if (!entry) {
+        history.push({
+          key,
+          medicineId: medicine.id,
+          name: medicine.name,
+          time,
+          date: todayKey(),
+          status: "Missed",
+          updatedAt: new Date().toISOString()
+        });
+      } else if (entry.status === "Pending") {
+        entry.status = "Missed";
+      }
+    });
+  });
+
+  saveData();
+}
+
+/* DASHBOARD */
+
+function renderMedicines() {
+  const root = $("todayMedicines");
+  root.innerHTML = "";
+
+  let takenCount = 0;
+
+  medicines.forEach(medicine => {
+    const card = document.createElement("div");
+    card.className = "medicine";
+
+    const heading = document.createElement("h3");
+    heading.textContent = medicine.name;
+    card.append(heading);
+
+    const stockLine = document.createElement("p");
+    stockLine.textContent =
+      "Stock: "+medicine.stock+
+      (medicine.stock <= medicine.lowStock ? " · Low stock" : "");
+    card.append(stockLine);
+
+    medicine.times.forEach(time => {
+      const entry = findDose(medicine,time,todayKey());
+      const status = entry ? entry.status : "Pending";
+
+      if (status === "Taken") takenCount++;
+
+      const line = document.createElement("p");
+      line.textContent = "⏰ "+time+" — ";
+
+      const badge = document.createElement("span");
+      badge.className = "status";
+
+      if (status === "Taken") badge.classList.add("done");
+      if (status === "Missed") badge.classList.add("missed");
+
+      badge.textContent = status;
+      line.append(badge);
+      card.append(line);
+
+      const action = document.createElement("div");
+      action.className = "actions";
+
+      const takenButton = document.createElement("button");
+      takenButton.className =
+        status === "Taken" ? "secondary" : "success";
+      takenButton.textContent =
+        status === "Taken" ? "Undo taken" : "Mark taken";
+
+      takenButton.addEventListener("click",() => {
+        if (status === "Taken") {
+          markPending(medicine,time);
+        } else {
+          markTaken(medicine,time);
+        }
+      });
+
+      action.append(takenButton);
+      card.append(action);
+    });
+
+    const buttons = document.createElement("div");
+    buttons.className = "actions";
+
+    const edit = document.createElement("button");
+    edit.className = "secondary";
+    edit.textContent = "Edit";
+    edit.addEventListener("click",() => editMedicine(medicine.id));
+
+    const del = document.createElement("button");
+    del.className = "danger";
+    del.textContent = "Delete";
+    del.addEventListener("click",() => deleteMedicine(medicine.id));
+
+    buttons.append(edit,del);
+    card.append(buttons);
+    root.append(card);
+  });
+
+  if (medicines.length === 0) {
+    root.textContent = "No medicines added yet.";
+  }
+
+  $("totalCount").textContent = medicines.length;
+  $("takenCount").textContent = takenCount;
+}
+
+/* CALENDAR */
+
+function renderCalendar() {
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+
+  $("monthTitle").textContent =
+    calendarDate.toLocaleString("en",{month:"long",year:"numeric"});
+
+  const root = $("calendar");
+  root.innerHTML = "";
+
+  ["Su","Mo","Tu","We","Th","Fr","Sa"].forEach(day => {
+    const el = document.createElement("div");
+    el.className = "weekday";
+    el.textContent = day;
+    root.append(el);
+  });
+
+  const firstDay = new Date(year,month,1).getDay();
+  const totalDays = new Date(year,month+1,0).getDate();
+
+  for (let i=0;i<firstDay;i++) {
+    const empty = document.createElement("div");
+    empty.className = "day empty";
+    root.append(empty);
+  }
+
+  for (let day=1;day<=totalDays;day++) {
+    const key = dateKey(new Date(year,month,day));
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "day";
+    button.textContent = day;
+
+    if (key === todayKey()) button.classList.add("today");
+    if (key === selectedDate) button.classList.add("selected");
+
+    if (history.some(h => h.date === key)) {
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      button.append(dot);
+    }
+
+    button.addEventListener("click",() => {
+      selectedDate = key;
+      renderCalendar();
+      renderSelectedHistory();
+    });
+
+    root.append(button);
+  }
+}
+
+function renderSelectedHistory() {
+  $("selectedDateTitle").textContent = selectedDate;
+
+  const root = $("selectedDateHistory");
+  root.innerHTML = "";
+
+  const entries = history.filter(h => h.date === selectedDate);
+
+  if (!entries.length) {
+    root.textContent = "No recorded doses for this date.";
+    return;
+  }
+  
+  entries.forEach(entry => {
+    const div = document.createElement("div");
+    div.className = "history-entry";
+
+    if (entry.status === "Missed") {
+      div.classList.add("missed-entry");
+    }
+
+    div.textContent =
+      entry.name + " — " + entry.time + " — " + entry.status;
+
+    root.append(div);
+  });
+}
+
+/* CALENDAR NAVIGATION */
+
+$("previousMonth").addEventListener("click", () => {
+  calendarDate.setMonth(calendarDate.getMonth() - 1);
+  renderCalendar();
+});
+
+$("nextMonth").addEventListener("click", () => {
+  calendarDate.setMonth(calendarDate.getMonth() + 1);
+  renderCalendar();
+});
+
+function renderAll() {
+  renderMedicines();
+  renderCalendar();
+  renderSelectedHistory();
+}
+
+/* NAVIGATION */
+
+function showPage(page) {
+  $("dashboardPage").classList.toggle("active", page === "dashboard");
+  $("historyPage").classList.toggle("active", page === "history");
+
+  $("dashboardNav").classList.toggle("active", page === "dashboard");
+  $("historyNav").classList.toggle("active", page === "history");
+}
+
+$("dashboardNav").addEventListener("click", () => {
+  showPage("dashboard");
+});
+
+$("historyNav").addEventListener("click", () => {
+  showPage("history");
+});
+
+/* ANDROID NOTIFICATION PERMISSIONS */
+
+async function enablePermissions() {
+  if (!isNative) {
+    showMessage(
+      "Open the installed Android APK. Acode preview cannot schedule Android notifications."
+    );
+    return false;
+  }
+
+  try {
+    let permission = await LocalNotifications.checkPermissions();
+
+    if (permission.display !== "granted") {
+      permission = await LocalNotifications.requestPermissions();
+    }
+
+    if (permission.display !== "granted") {
+      showMessage("Notification permission was not granted.");
+      return false;
+    }
+
+    if (LocalNotifications.checkExactNotificationSetting) {
+      const exact =
+        await LocalNotifications.checkExactNotificationSetting();
+
+      if (exact.exact_alarm === false) {
+        showMessage(
+          "Exact alarm access is disabled. Enable it in Android settings."
+        );
+
+        await LocalNotifications.changeExactNotificationSetting();
+        return false;
+      }
+    }
+
+    showMessage("Notification permission checked successfully.");
+    return true;
+
+  } catch (error) {
+    showMessage("Permission error: " + error.message);
+    return false;
+  }
+}
+
+$("permissionButton").addEventListener("click", enablePermissions);
+
+/* NOTIFICATION ID */
+
+function notificationId(text) {
+  let hash = 0;
+
+  for (let i = 0; i < text.length; i++) {
+    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+  }
+
+  return (Math.abs(hash) % 2000000000) + 1;
+}
+
+/* SCHEDULE DAILY REMINDERS */
+
+async function scheduleAll() {
+  if (!isNative) {
+    showMessage(
+      "Notifications require the installed Android APK, not Acode preview."
+    );
+    return;
+  }
+
+  const allowed = await enablePermissions();
+  if (!allowed) return;
+
+  try {
+    const oldIds = JSON.parse(
+      localStorage.getItem("pillScheduledIds") || "[]"
+    );
+
+    if (oldIds.length > 0) {
+      await LocalNotifications.cancel({
+        notifications: oldIds.map(id => ({ id }))
+      });
+    }
+
+    await LocalNotifications.registerActionTypes({
+      types: [{
+        id: "DOSE_ACTIONS",
+        actions: [
+          { id: "TAKEN", title: "Taken", foreground: true },
+          { id: "SNOOZE", title: "Snooze 10 min", foreground: true }
+        ]
+      }]
+    });
+
+    const notifications = [];
+    const newIds = [];
+
+    medicines.forEach(medicine => {
+      medicine.times.forEach(time => {
+        const parts = time.split(":").map(Number);
+        const id = notificationId(medicine.id + "-" + time);
+
+        notifications.push({
+          id: id,
+          title: "Medicine reminder 💊",
+          body: "Reminder for " + medicine.name,
+
+          schedule: {
+            on: {
+              hour: parts[0],
+              minute: parts[1]
+            },
+            allowWhileIdle: true
+          },
+
+          actionTypeId: "DOSE_ACTIONS",
+
+          extra: {
+            pillReminderManaged: true,
+            medicineId: medicine.id,
+            time: time
+          }
+        });
+
+        newIds.push(id);
+      });
+    });
+
+    if (notifications.length > 0) {
+      await LocalNotifications.schedule({
+        notifications: notifications
+      });
+    }
+
+    localStorage.setItem(
+      "pillScheduledIds",
+      JSON.stringify(newIds)
+    );
+
+    const pending = await LocalNotifications.getPending();
+
+    showMessage(
+      "Reminder scheduling completed.\n" +
+      "Daily reminders requested: " + notifications.length +
+      "\nPending notifications: " + pending.notifications.length
+    );
+
+  } catch (error) {
+    showMessage("Scheduling error: " + error.message);
+  }
+}
+
+$("rescheduleButton").addEventListener("click", scheduleAll);
+
+/* CHECK NOTIFICATION STATUS */
+
+$("checkButton").addEventListener("click", async () => {
+  if (!isNative) {
+    showMessage("Open the installed APK to check notification settings.");
+    return;
+  }
+
+  try {
+    const permission =
+      await LocalNotifications.checkPermissions();
+
+    const enabled =
+      await LocalNotifications.areEnabled();
+
+    const pending =
+      await LocalNotifications.getPending();
+
+    let exact = "Not checked";
+
+    if (LocalNotifications.checkExactNotificationSetting) {
+      const result =
+        await LocalNotifications.checkExactNotificationSetting();
+
+      exact = String(result.exact_alarm);
+    }
+
+    showMessage(
+      "Notification permission: " + permission.display +
+      "\nNotifications enabled: " + enabled.display +
+      "\nExact alarm access: " + exact +
+      "\nPending notifications: " + pending.notifications.length
+    );
+
+  } catch (error) {
+    showMessage("Status check error: " + error.message);
+  }
+});
+
+/* NOTIFICATION ACTIONS */
+
+if (isNative) {
+  LocalNotifications.addListener(
+    "localNotificationActionPerformed",
+    async event => {
+      const data = event.notification.extra || {};
+
+      const medicine = medicines.find(
+        m => m.id === data.medicineId
+      );
+
+      if (!medicine) return;
+
+      if (event.actionId === "TAKEN") {
+        markTaken(medicine, data.time);
+      }
+
+      if (event.actionId === "SNOOZE") {
+        try {
+          await LocalNotifications.schedule({
+            notifications: [{
+              id: notificationId(
+                "snooze-" + medicine.id + "-" + Date.now()
+              ),
+
+              title: "Medicine reminder 💊",
+              body: "Reminder for " + medicine.name,
+
+              schedule: {
+                at: new Date(Date.now() + 10 * 60 * 1000)
+              },
+
+              extra: data
+            }]
+          });
+
+        } catch (error) {
+          showMessage("Snooze error: " + error.message);
+        }
+      }
+    }
+  );
+}
+
+/* MONTHLY REPORT */
+
+$("reportButton").addEventListener("click", () => {
+  const month = $("reportMonth").value;
+
+  if (!month) {
+    $("reportResult").textContent = "Please select a month.";
+    return;
+  }
+
+  const entries = history.filter(
+    h => h.date.startsWith(month)
+  );
+
+  const taken = entries.filter(
+    h => h.status === "Taken"
+  ).length;
+
+  const missed = entries.filter(
+    h => h.status === "Missed"
+  ).length;
+
+  const pending = entries.filter(
+    h => h.status === "Pending"
+  ).length;
+
+  $("reportResult").textContent =
+    "Month: " + month +
+    "\nTaken: " + taken +
+    "\nMissed: " + missed +
+    "\nPending: " + pending +
+    "\nRecorded doses: " + entries.length;
+});
+
+/* FILE DOWNLOAD FUNCTION */
+
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], { type: type });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+
+  document.body.append(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* CSV EXPORT */
+
+$("csvButton").addEventListener("click", () => {
+  const rows = [
+    ["Date", "Medicine", "Time", "Status"]
+  ];
+
+  history.forEach(h => {
+    rows.push([
+      h.date,
+      h.name,
+      h.time,
+      h.status
+    ]);
+  });
+
+  const csv = rows.map(row =>
+    row.map(value =>
+      '"' + String(value).replace(/"/g, '""') + '"'
+    ).join(",")
+  ).join("\n");
+
+  downloadFile(
+    "PillReminder-History.csv",
+    csv,
+    "text/csv;charset=utf-8"
+  );
+});
+
+/* JSON BACKUP */
+
+$("backupButton").addEventListener("click", () => {
+  const backup = {
+    version: 1,
+    medicines: medicines,
+    history: history,
+    createdAt: new Date().toISOString()
+  };
+
+  downloadFile(
+    "PillReminder-Backup.json",
+    JSON.stringify(backup, null, 2),
+    "application/json"
+  );
+});
+
+/* JSON RESTORE */
+
+$("restoreFile").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const backup = JSON.parse(await file.text());
+
+    if (
+      !Array.isArray(backup.medicines) ||
+      !Array.isArray(backup.history)
+    ) {
+      throw new Error("Invalid backup file.");
+    }
+
+    if (!confirm("Restore backup? Current app data will be replaced.")) {
+      event.target.value = "";
+      return;
+    }
+
+    medicines = backup.medicines;
+    history = backup.history;
+
+    saveData();
+    resetForm();
+    renderAll();
+
+    showMessage("Backup restored. Schedule reminders again.");
+
+    if (isNative) {
+      await scheduleAll();
+    }
+
+  } catch (error) {
+    alert("Backup restore failed: " + error.message);
+  }
+
+  event.target.value = "";
+});
+
+/* APP STARTUP */
+
+$("headerDate").textContent =
+  new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+
+const now = new Date();
+
+$("reportMonth").value =
+  now.getFullYear() + "-" +
+  String(now.getMonth() + 1).padStart(2, "0");
+
+loadData();
+updateMissedDoses();
+renderAll();
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    updateMissedDoses();
+    renderAll();
+  }
+});
+
+window.addEventListener("focus", () => {
+  updateMissedDoses();
+  renderAll();
+});
+
+</script>
+</body>
+</html>
