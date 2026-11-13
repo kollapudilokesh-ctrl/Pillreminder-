@@ -26,14 +26,48 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Check project files
+        run: |
+          ls -la
+          test -f package.json
+          test -f index.html
+          cat package.json
+
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm cache clean --force
+          npm install --legacy-peer-deps --no-audit --no-fund --verbose
 
       - name: Build web app
         run: npm run build
 
       - name: Add Android
         run: npx cap add android
+
+      - name: Add exact alarm permission
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          path = Path("android/app/src/main/AndroidManifest.xml")
+          content = path.read_text()
+
+          permission = '<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />'
+
+          if "android.permission.SCHEDULE_EXACT_ALARM" not in content:
+              content, count = re.subn(
+                  r'(<manifest\b[^>]*>)',
+                  r'\1\n    ' + permission,
+                  content,
+                  count=1
+              )
+              if count != 1:
+                  raise SystemExit("Manifest opening tag not found")
+
+          path.write_text(content)
+          print("Exact alarm permission configured")
+          PY
 
       - name: Sync Android
         run: npx cap sync android
@@ -42,11 +76,12 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: PillReminder-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
           
